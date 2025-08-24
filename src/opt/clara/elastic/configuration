@@ -1,0 +1,131 @@
+container {
+    name elasticsearch {
+        description "Elastic database used to consolidate log sources, and data analytics for CLARA"
+        entrypoint /usr/share/elasticsearch/startup/setup-elastic.sh
+        environment ES_SETTING_DISCOVERY_TYPE {
+            value single-node
+        }
+         environment ES_SETTING_XPACK_ML_USE__AUTO__MACHINE__MEMORY__PERCENT {
+            value true
+        }
+         environment ES_SETTING_XPACK_MONITORING_COLLECTION_ENABLED {
+            value true
+        }
+        image docker.elastic.co/elasticsearch/elasticsearch: 9.1.2
+        memory 6144
+        network elastic {
+            address 10.199.10.10
+        }
+        port 9200 {
+            destination 9200
+            source 9200
+        }
+        volume config {
+            destination /usr/share/elasticsearch/config
+            source /opt/elastic/config
+        }
+        volume data {
+            destination /usr/share/elasticsearch/data
+            source /opt/elastic/data
+        }
+        volume logs {
+            destination /usr/share/elasticsearch/logs
+            source /opt/elastic/logs
+        }
+        volume plugins {
+            destination /usr/share/elasticsearch/plugins
+            source /opt/elastic/plugins
+        }
+        volume enrollment {
+            destination /usr/share/elasticsearch/enrollment
+            source /opt/elastic/enrollment
+        }
+        volume startup {
+            destination /usr/share/elasticsearch/startup
+            mode ro
+            source /opt/clara/elastic/boot
+        }
+    }
+    name kibana {
+        description "Dashboard for Elastic - available for advanced users"
+        command /usr/share/kibana/startup/setup-kibana.sh
+        image docker.elastic.co/kibana/kibana: 9.1.2
+        memory 1024
+        network elastic {}
+        port 5601 {
+            destination 5601
+            source 5601
+        }
+        volume config {
+            destination /usr/share/kibana/config
+            source /opt/kibana/config
+        }
+        volume data {
+            destination /usr/share/kibana/data
+            source /opt/kibana/data
+        }
+        volume logs {
+            destination /usr/share/kibana/logs
+            source /opt/kibana/logs
+        }
+        volume plugins {
+            destination /usr/share/kibana/plugins
+            source /opt/kibana/plugins
+        }
+        volume enrollment {
+            destination /usr/share/kibana/enrollment
+            source /opt/elastic/enrollment
+        }
+        volume startup {
+            destination /usr/share/kibana/startup
+            mode ro
+            source /opt/clara/elastic/boot
+        }
+    }
+    name fleet {
+        description "Fleet Server: Used for log collection"
+        entrypoint /usr/share/elastic-agent/startup/setup-fleet.sh
+        environment ELASTICSEARCH_CA {
+            value /usr/share/elastic-agent/certs/http_ca.crt
+        }
+        environment FLEET_SERVER_ELASTICSEARCH_HOST {
+            value https: //elasticsearch:9200
+        }
+        environment FLEET_SERVER_ENABLE {
+            value true
+        }
+        environment FLEET_SERVER_POLICY_ID {
+            value fleet-server-policy
+        }
+        image docker.elastic.co/elastic-agent/elastic-agent: 9.1.2
+        memory 1024
+        network elastic {}
+        port 8220 {
+            destination 8220
+            source 8220
+        }
+        volume certs {
+            destination /usr/share/elastic-agent/certs
+            mode ro
+            source /opt/elastic/config/certs
+        }
+        volume startup {
+            destination /usr/share/elastic-agent/startup
+            mode ro
+            source /opt/clara/elastic/boot
+        }
+        volume enrollment {
+            destination /usr/share/elastic-agent/enrollment
+            mode ro
+            source /opt/elastic/enrollment
+        }
+        volume suricata {
+            destination /var/log/suricata/eve.json
+            source /var/log/suricata/eve.json
+        }
+    }
+    network elastic {
+        description "Container network Elastic Stack"
+        prefix 10.199.10.0/24
+    }
+}
