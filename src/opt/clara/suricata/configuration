@@ -1,0 +1,19 @@
+service {
+    suricata {
+        address-group home_net {
+            address 192.168.0.0/16
+            address 172.16.0.0/12
+            address 10.0.0.0/8
+        }
+        interface wlan0
+        port-group ftp_ports {
+            port 21
+        }
+        port-group http_ports {
+            port 80
+        }
+        port-group file_data_ports {
+            port 80,110,143
+        }
+    }
+}

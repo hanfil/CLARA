@@ -1,0 +1,28 @@
+container {
+    name cloudflared {
+        command "tunnel run"
+        environment TUNNEL_TOKEN {
+            value eyJhIjoiZjJjY2Y5OTE2YzY5YTQ4ZGQ5NGYxYTEyZDlkNmYzZjkiLCJ0IjoiMzY3ZWViN2UtYjRiNS00MTZiLWJkZDItMWUxMzFlODdkNTQ3IiwicyI6Ik1EazBaR0prWldNdFpUQTRaQzAwWWpRekxUbGtaVGd0T1dKa09ESTNNelE0WmpFeCJ9
+        }
+        image cloudflare/cloudflared:latest
+    }
+    network cloudflared {
+        prefix 10.199.2.0/24
+    }
+}
+nat {
+    source {
+        rule 2 {
+            description "Container network NAT - Cloudflare Tunnel"
+            outbound-interface {
+                name wlan0
+            }
+            source {
+                address 10.199.2.0/24
+            }
+            translation {
+                address masquerade
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ container {
          environment ES_SETTING_XPACK_MONITORING_COLLECTION_ENABLED {
             value true
         }
-        image docker.elastic.co/elasticsearch/elasticsearch: 9.1.2
+        image docker.elastic.co/elasticsearch/elasticsearch:9.1.2
         memory 6144
         network elastic {
             address 10.199.10.10
@@ -49,7 +49,7 @@ container {
     name kibana {
         description "Dashboard for Elastic - available for advanced users"
         command /usr/share/kibana/startup/setup-kibana.sh
-        image docker.elastic.co/kibana/kibana: 9.1.2
+        image docker.elastic.co/kibana/kibana:9.1.2
         memory 1024
         network elastic {}
         port 5601 {
@@ -89,7 +89,7 @@ container {
             value /usr/share/elastic-agent/certs/http_ca.crt
         }
         environment FLEET_SERVER_ELASTICSEARCH_HOST {
-            value https: //elasticsearch:9200
+            value https://elasticsearch:9200
         }
         environment FLEET_SERVER_ENABLE {
             value true
@@ -97,12 +97,16 @@ container {
         environment FLEET_SERVER_POLICY_ID {
             value fleet-server-policy
         }
-        image docker.elastic.co/elastic-agent/elastic-agent: 9.1.2
+        image docker.elastic.co/elastic-agent/elastic-agent:9.1.2
         memory 1024
         network elastic {}
         port 8220 {
             destination 8220
             source 8220
+        }
+        port 2055 {
+            destination 2055
+            source 2055
         }
         volume certs {
             destination /usr/share/elastic-agent/certs

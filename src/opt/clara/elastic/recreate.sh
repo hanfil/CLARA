@@ -8,7 +8,8 @@ sleep 2
 
 # CLEANUP FOLDERS
 echo "Recreating folder structure..."
-sudo /opt/clara/elastic/cleanup.sh
+sudo rm -r /opt/elastic
+sudo rm -r /opt/kibana
 
 sleep 2
 
