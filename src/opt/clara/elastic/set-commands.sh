@@ -47,6 +47,10 @@ set container name fleet volume enrollment source '/opt/elastic/enrollment'
 set container name fleet volume startup destination '/usr/share/elastic-agent/startup'
 set container name fleet volume startup mode 'ro'
 set container name fleet volume startup source '/opt/clara/elastic/boot'
+set container name fleet volume zeek source /opt/zeek/logs
+set container name fleet volume zeek destination /opt/zeek/logs/current
+set container name fleet volume suricata source /var/log/suricata
+set container name fleet volume suricata destination /var/log/suricata
 set container name kibana command '/usr/share/kibana/startup/setup-kibana.sh'
 set container name kibana description 'Dashboard for Elastic - available for advanced users'
 set container name kibana image 'docker.elastic.co/kibana/kibana:9.1.2'

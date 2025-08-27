@@ -1,0 +1,22 @@
+# suricata -c /etc/suricata/suricata.yaml -q 1 
+# sudo curl -L -o /opt/suricata/emerging.rules.tar.gz https://rules.emergingthreats.net/open/suricata-8.0.0/emerging.rules.tar.gz
+# sudo tar xzf /opt/suricata/emerging.rules.tar.gz -C /opt/suricata/rules
+
+nfq:
+  mode: verdict    # Return verdicts (not route mode)
+  fail-open: yes   # Accept packets if Suricata fails
+  
+# Firewall mode configuration
+firewall-mode: true
+default-policy: accept
+
+default-rule-path: /var/lib/suricata/rules
+
+rule-files:
+  - suricata.rules
+
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: /var/log/suricata/eve.json

@@ -127,6 +127,10 @@ container {
             destination /var/log/suricata/eve.json
             source /var/log/suricata/eve.json
         }
+        volume suricata {
+            destination /opt/zeek/logs/current
+            source /opt/zeek/logs
+        }
     }
     network elastic {
         description "Container network Elastic Stack"

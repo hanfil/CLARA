@@ -1,0 +1,49 @@
+####################################################################
+# Minimal "Allow All" Firewall Rules for Suricata 8.x Firewall Mode
+# Troubleshoot with: cat /var/log/suricata/firewall.json | jq
+#####################################################################
+
+# ── LAYER-3 FLOWS ─────────────────────────────────────────────────────────────
+# ── TCP FLOWS 
+accept:hook tcp:all    any any <> any any (msg:"FW allow all TCP flows";   sid:100;)
+# ── UDP FLOWS 
+accept:hook udp:all    any any <> any any (msg:"FW allow all UDP flows";   sid:101;)
+# ── ICMP PACKET
+accept:packet icmp:all any any <> any any (msg:"FW allow all ICMP packets";sid:102;)
+# ── IP PACKETS - protocols like GRE (47), ESP (50), AH (51)
+accept:packet ip:all   any any <> any any (msg:"FW allow all IP protocols";sid:103;)
+
+# ── HTTP/1.x STATES ───────────────────────────────────────────────────────────
+accept:hook http1:request_started   any any -> any any (msg:"FW allow HTTP req_started";  sid:300;)
+accept:hook http1:request_line      any any -> any any (msg:"FW allow HTTP req_line";     sid:301;)
+accept:hook http1:request_headers   any any -> any any (msg:"FW allow HTTP req_headers";  sid:302;)
+accept:hook http1:request_body      any any -> any any (msg:"FW allow HTTP req_body";     sid:303;)
+accept:hook http1:request_trailer   any any -> any any (msg:"FW allow HTTP req_trailer";  sid:304;)
+accept:hook http1:request_complete  any any -> any any (msg:"FW allow HTTP req_complete"; sid:305;)
+accept:hook http1:response_started  any any <> any any (msg:"FW allow HTTP resp_started"; sid:310;)
+accept:hook http1:response_line     any any <> any any (msg:"FW allow HTTP resp_line";    sid:311;)
+accept:hook http1:response_headers  any any <> any any (msg:"FW allow HTTP resp_headers"; sid:312;)
+accept:hook http1:response_body     any any <> any any (msg:"FW allow HTTP resp_body";    sid:313;)
+accept:hook http1:response_trailer  any any <> any any (msg:"FW allow HTTP resp_trailer"; sid:314;)
+accept:hook http1:response_complete any any <> any any (msg:"FW allow HTTP resp_complete";sid:315;)
+
+# ── TLS STATES ────────────────────────────────────────────────────────────────
+accept:hook tls:client_in_progress    any any -> any any (msg:"FW allow TLS client_in_prog";       sid:400;)
+accept:hook tls:client_hello_done     any any -> any any (msg:"FW allow TLS client_hello";         sid:401;)
+accept:hook tls:client_finished       any any -> any any (msg:"FW allow TLS client_finished";      sid:402;)
+accept:hook tls:client_cert_done      any any -> any any (msg:"FW allow TLS client_cert_donw";     sid:403;)
+accept:hook tls:client_handshake_done any any -> any any (msg:"FW allow TLS client_handshake_done";sid:404;)
+accept:hook tls:server_in_progress    any any <> any any (msg:"FW allow TLS server_in_prog";       sid:410;)
+accept:hook tls:server_hello          any any <> any any (msg:"FW allow TLS server_hello";         sid:411;)
+accept:hook tls:server_finished       any any <> any any (msg:"FW allow TLS server_finished";      sid:412;)
+accept:hook tls:server_cert_done      any any <> any any (msg:"FW allow TLS server_cert_done";     sid:413;)
+accept:hook tls:server_hello_done     any any <> any any (msg:"FW allow TLS server_hello_done";    sid:414;)
+accept:hook tls:server_handshake_done any any <> any any (msg:"FW allow TLS server_handshake_done";sid:415;)
+
+# ── SSH STATES ────────────────────────────────────────────────────────────────
+accept:hook ssh:request_in_progress      any any -> any any (msg:"FW allow SSH request_in_progress";    sid:500;)
+accept:hook ssh:request_banner_wait_eol  any any -> any any (msg:"FW allow SSH request_banner_wait_eol";sid:501;)
+accept:hook ssh:request_banner_done      any any -> any any (msg:"FW allow SSH request_banner_done";    sid:502;)
+accept:hook ssh:response_in_progress     any any <> any any (msg:"FW allow SSH response_in_progress";   sid:503;)
+accept:hook ssh:response_banner_wait_eol any any <> any any (msg:"FW allow SSH response_banner_wai_eol";sid:504;)
+accept:hook ssh:response_banner_done     any any <> any any (msg:"FW allow SSH response_banner_done";   sid:505;)

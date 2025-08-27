@@ -2,6 +2,7 @@ sudo mkdir /opt/zeek
 sudo mkdir /opt/zeek/logs
 sudo mkdir /opt/zeek/scripts
 sudo cat > /opt/zeek/scripts/local.zeek << EOF
+@load policy/tuning/json-logs.zeek
 @load base/frameworks/logging
 @load base/frameworks/packet-filter
 
